@@ -1,19 +1,58 @@
 #include "util.h"
 #include "arreglos.h"
 
-void mostrar_menu_principal() {
-    printf("\n=== COMPARADOR DE MÉTODOS DE ORDENAMIENTO ===\n\n");
-    printf("Modos de prueba disponibles:\n");
-    printf("1. Prueba simple (tamaño y rango específico)\n");
-    printf("2. Prueba con distribución específica\n");
-    printf("3. Pruebas completas (todas las distribuciones y tamaños)\n");
-    printf("4. Salir\n");
+void menu_principal();
+void menu_pruebas_individuales();
+void probar_estabilidad();
+void modo_distribucion_especifica();
+void modo_pruebas_completas();
+
+int main() {
+    srand(time(NULL));
+    menu_principal();
+    return 0;
 }
 
-void modo_prueba_simple() {
+void menu_principal() {
+    int opcion;
+    
+    do {
+        printf("\n=== COMPARADOR DE METODOS DE ORDENAMIENTO ===\n");
+        printf("1. Pruebas de rendimiento individuales\n");
+        printf("2. Pruebas con distribuciones específicas\n");
+        printf("3. Pruebas completas automáticas\n");
+        printf("4. Pruebas de estabilidad\n");
+        printf("5. Salir\n");
+        printf("Seleccione una opcion: ");
+        scanf("%d", &opcion);
+        
+        switch(opcion) {
+            case 1:
+                menu_pruebas_individuales();
+                break;
+            case 2:
+                modo_distribucion_especifica();
+                break;
+            case 3:
+                modo_pruebas_completas();
+                break;
+            case 4:
+                probar_estabilidad();
+                break;
+            case 5:
+                printf("Saliendo...\n");
+                break;
+            default:
+                printf("Opcion no valida.\n");
+        }
+    } while(opcion != 5);
+}
+
+// Versión de tu amigo (simple)
+void menu_pruebas_individuales() {
     int tamaño, min, max;
     
-    printf("\n--- MODO PRUEBA SIMPLE ---\n");
+    printf("\n=== PRUEBAS DE RENDIMIENTO INDIVIDUALES ===\n");
     
     // Validación del tamaño del arreglo
     do {
@@ -38,13 +77,18 @@ void modo_prueba_simple() {
     Resultado resultados[4];
     ejecutar_pruebas(tamaño, min, max, resultados);
     imprimir_resultados(resultados, 4);
+    
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
 }
 
+// Tu versión avanzada - Distribuciones específicas
 void modo_distribucion_especifica() {
     int tamaño, min, max;
     char distribucion[20];
     
-    printf("\n--- MODO DISTRIBUCIÓN ESPECÍFICA ---\n");
+    printf("\n=== PRUEBAS CON DISTRIBUCIONES ESPECÍFICAS ===\n");
     
     // Elegir tamaño
     do {
@@ -119,7 +163,7 @@ void modo_distribucion_especifica() {
     printf("\nEjecutando pruebas de ordenamiento...\n");
     for (int i = 0; i < 4; i++) {
         printf("Probando %s... ", nombres[i]);
-        int *copia = copiar_arreglo(original, tamaño); // Usa la función de util.c
+        int *copia = copiar_arreglo(original, tamaño);
         resultados[i].tiempo = medir_tiempo(copia, tamaño, metodos[i]);
         strcpy(resultados[i].nombre, nombres[i]);
         free(copia);
@@ -128,17 +172,22 @@ void modo_distribucion_especifica() {
     
     free(original);
     imprimir_resultados(resultados, 4);
+    
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
 }
 
+// Tu versión avanzada - Pruebas completas
 void modo_pruebas_completas() {
-    printf("\n--- MODO PRUEBAS COMPLETAS ---\n");
+    printf("\n=== PRUEBAS COMPLETAS AUTOMÁTICAS ===\n");
     
     int tamanos[] = {100, 200, 300, 400, 500, 1000, 2500, 5000, 7500};
     int num_tamanos = 9;
     const char *distribuciones[] = {"aleatorio", "ordenado", "reverso", "casi", "duplicados"};
     int num_distribuciones = 5;
     int repeticiones = 3;
-    int min = 0, max = 1000; // Rango fijo para pruebas completas
+    int min = 0, max = 1000;
     
     printf("Configuración de pruebas:\n");
     printf("- Tamaños: ");
@@ -208,7 +257,7 @@ void modo_pruebas_completas() {
                         original = generar_arreglo_aleatorio(tamaño, min, max);
                     }
                     
-                    int* copia = copiar_arreglo(original, tamaño); // Usa la función de util.c
+                    int* copia = copiar_arreglo(original, tamaño);
                     
                     // Medir tiempo
                     double tiempo = medir_tiempo(copia, tamaño, metodos[a]);
@@ -234,42 +283,19 @@ void modo_pruebas_completas() {
     fclose(archivo);
     printf("\n¡Pruebas completadas! Resultados guardados en 'resultados_completos.csv'\n");
     printf("Total de pruebas ejecutadas: %d\n", prueba_actual);
+    
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
 }
 
-int main() {
-    srand(time(NULL));
+// Versión de tu amigo - estabilidad (necesitarás implementar probar_estabilidad_todos())
+void probar_estabilidad() {
+    printf("\n=== PRUEBAS DE ESTABILIDAD ===\n");
+    // probar_estabilidad_todos(); // Comentado hasta que implementes esta función
+    printf("Funcionalidad de estabilidad en desarrollo...\n");
     
-    int opcion;
-    
-    do {
-        mostrar_menu_principal();
-        printf("\nSeleccione modo de prueba (1-4): ");
-        scanf("%d", &opcion);
-        
-        switch(opcion) {
-            case 1:
-                modo_prueba_simple();
-                break;
-            case 2:
-                modo_distribucion_especifica();
-                break;
-            case 3:
-                modo_pruebas_completas();
-                break;
-            case 4:
-                printf("Saliendo del programa...\n");
-                break;
-            default:
-                printf("Opción inválida. Intente nuevamente.\n");
-        }
-        
-        if (opcion != 4) {
-            printf("\nPresione Enter para continuar...");
-            getchar(); // Limpiar buffer
-            getchar(); // Esperar entrada
-        }
-        
-    } while (opcion != 4);
-    
-    return 0;
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
 }
