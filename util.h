@@ -7,7 +7,7 @@
 #include <string.h>
 #include "contadores.h"
 #include "repeticiones.h"
-
+#include "generador_datos.h"
 typedef struct {
     char nombre[20];
     double tiempo_ms;
