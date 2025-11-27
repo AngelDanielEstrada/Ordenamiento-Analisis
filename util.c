@@ -2,6 +2,10 @@
 #include "arreglos.h"
 #include <limits.h>
 #include <math.h>
+#include "contadores.h"
+
+// Inicializar el contador global (agregar esto después de los includes)
+Contadores contadores_global;
 
 // Función para generar un arreglo de números aleatorios (original)
 int *generar_arreglo(int tamaño, int min, int max)
@@ -10,60 +14,70 @@ int *generar_arreglo(int tamaño, int min, int max)
 }
 
 // Algoritmo de ordenamiento por Selección (versión base)
-void seleccion(int *arr, int n)
-{
-    for (int i = 0; i < n - 1; i++)
-    {
+void seleccion(int *arr, int n) {
+    for (int i = 0; i < n - 1; i++) {
         int min_idx = i;
-        for (int j = i + 1; j < n; j++)
-        {
-            if (arr[j] < arr[min_idx])
-            {
+        for (int j = i + 1; j < n; j++) {
+            incrementar_comparacion(&contadores_global); // Contar comparación
+            if (arr[j] < arr[min_idx]) {
                 min_idx = j;
             }
         }
-        int temp = arr[min_idx];
-        arr[min_idx] = arr[i];
-        arr[i] = temp;
+        if (min_idx != i) {
+            int temp = arr[min_idx];
+            arr[min_idx] = arr[i];
+            arr[i] = temp;
+            incrementar_swap(&contadores_global); // Contar swap
+        }
     }
 }
-
 // Funciones auxiliares para Merge Sort (versión base)
-void merge(int *arr, int l, int m, int r)
-{
+void merge(int *arr, int l, int m, int r) {
+    int i, j, k;
     int n1 = m - l + 1;
     int n2 = r - m;
-
+    
     int *L = (int *)malloc(n1 * sizeof(int));
     int *R = (int *)malloc(n2 * sizeof(int));
-
-    for (int i = 0; i < n1; i++)
+    
+    for (i = 0; i < n1; i++)
         L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
+    for (j = 0; j < n2; j++)
         R[j] = arr[m + 1 + j];
-
-    int i = 0, j = 0, k = l;
-    while (i < n1 && j < n2)
-    {
-        if (L[i] <= R[j])
-            arr[k++] = L[i++];
-        else
-            arr[k++] = R[j++];
+    
+    i = 0; j = 0; k = l;
+    
+    while (i < n1 && j < n2) {
+        incrementar_comparacion(&contadores_global); // Contar comparación
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        incrementar_swap(&contadores_global); // Contar movimiento
+        k++;
     }
-
-    while (i < n1)
-        arr[k++] = L[i++];
-    while (j < n2)
-        arr[k++] = R[j++];
-
+    
+    while (i < n1) {
+        arr[k] = L[i];
+        i++; k++;
+        incrementar_swap(&contadores_global); // Contar movimiento
+    }
+    
+    while (j < n2) {
+        arr[k] = R[j];
+        j++; k++;
+        incrementar_swap(&contadores_global); // Contar movimiento
+    }
+    
     free(L);
     free(R);
 }
 
-void merge_sort_helper(int *arr, int l, int r)
-{
-    if (l < r)
-    {
+void merge_sort_helper(int *arr, int l, int r) {
+    if (l < r) {
         int m = l + (r - l) / 2;
         merge_sort_helper(arr, l, m);
         merge_sort_helper(arr, m + 1, r);
@@ -71,11 +85,9 @@ void merge_sort_helper(int *arr, int l, int r)
     }
 }
 
-void merge_sort(int *arr, int n)
-{
+void merge_sort(int *arr, int n) {
     merge_sort_helper(arr, 0, n - 1);
 }
-
 // Implementación de Counting Sort (versión base)
 void counting_sort(int *arr, int n)
 {
