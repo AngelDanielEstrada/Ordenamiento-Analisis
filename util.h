@@ -17,16 +17,10 @@ int* copiar_arreglo(const int* original, int tamaño);
 void imprimir_arreglo(const int* arreglo, int tamaño);
 
 // Algoritmos de ordenamiento
-void burbuja(int* arr, int n);
-void insercion(int* arr, int n);
 void seleccion(int* arr, int n);
 void merge_sort(int* arr, int n);
-void heap_sort(int* arr, int n);
-void quick_sort(int* arr, int n);
-void bucket_sort(int* arr, int n);
 void counting_sort(int* arr, int n);
-void radix_sort(int* arr, int n);
-void bogus_sort(int* arr, int n);
+void tim_sort(int* arr, int n);
 
 // Funciones para pruebas
 double medir_tiempo(int* arr, int n, void (*func_ordenamiento)(int*, int));

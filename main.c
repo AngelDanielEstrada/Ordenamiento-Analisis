@@ -27,9 +27,9 @@ int main() {
         }
     } while (min > max);
     
-    Resultado resultados[10];
+    Resultado resultados[4];
     ejecutar_pruebas(tamaño, min, max, resultados);
-    imprimir_resultados(resultados, 10);
+    imprimir_resultados(resultados, 4);
     
     printf("\nPresione Enter para salir...");
     getchar(); // Limpiar el buffer
