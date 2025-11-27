@@ -3,33 +3,7 @@
 #include <math.h>
 
 // Función para generar un arreglo de números aleatorios
-int *generar_arreglo(int tamaño, int min, int max)
-{
-    int *arr = (int *)malloc(tamaño * sizeof(int));
-    if (!arr)
-    {
-        perror("Error de memoria");
-        exit(EXIT_FAILURE);
-    }
-    for (int i = 0; i < tamaño; i++)
-    {
-        arr[i] = rand() % (max - min + 1) + min;
-    }
-    return arr;
-}
 
-// Función para crear una copia de un arreglo
-int *copiar_arreglo(const int *original, int tamaño)
-{
-    int *copia = (int *)malloc(tamaño * sizeof(int));
-    if (!copia)
-    {
-        perror("Error de memoria");
-        exit(EXIT_FAILURE);
-    }
-    memcpy(copia, original, tamaño * sizeof(int));
-    return copia;
-}
 
 // Algoritmo de ordenamiento por Selección (versión base)
 void seleccion(int *arr, int n)
@@ -198,10 +172,11 @@ double medir_tiempo(int *arr, int n, void (*func_ordenamiento)(int *, int))
 }
 
 // Función para ejecutar todas las pruebas (modificada para 4 métodos)
-void ejecutar_pruebas(int tamaño, int min, int max, Resultado *resultados)
-{
+void ejecutar_pruebas(int tamaño, int min, int max, Resultado *resultados) {
     printf("\nGenerando arreglo de prueba\n");
-    int *original = generar_arreglo(tamaño, min, max);
+    
+    // USAR la nueva función de arreglos.h en lugar de la duplicada
+    int *original = generar_arreglo_aleatorio(tamaño, min, max);
 
     void (*metodos[])(int *, int) = {
         seleccion, merge_sort, counting_sort, tim_sort};
@@ -210,10 +185,12 @@ void ejecutar_pruebas(int tamaño, int min, int max, Resultado *resultados)
         "Seleccion", "Merge Sort", "Counting Sort", "Tim Sort"};
 
     printf("Ejecutando pruebas de ordenamiento\n");
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         printf("Probando %s\n", nombres[i]);
+        
+        // USAR la nueva función de arreglos.h
         int *copia = copiar_arreglo(original, tamaño);
+        
         resultados[i].tiempo = medir_tiempo(copia, tamaño, metodos[i]);
         strcpy(resultados[i].nombre, nombres[i]);
         free(copia);
@@ -222,7 +199,6 @@ void ejecutar_pruebas(int tamaño, int min, int max, Resultado *resultados)
     free(original);
     printf("Pruebas completadas.\n");
 }
-
 // Función para imprimir los resultados (sin cambios)
 void imprimir_resultados(const Resultado *resultados, int num_metodos)
 {
