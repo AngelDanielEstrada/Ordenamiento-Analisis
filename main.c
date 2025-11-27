@@ -1,11 +1,19 @@
 #include "util.h"
+#include "arreglos.h"
 
-int main() {
-    srand(time(NULL)); // Inicializar semilla para números aleatorios
-    
+void mostrar_menu_principal() {
+    printf("\n=== COMPARADOR DE MÉTODOS DE ORDENAMIENTO ===\n\n");
+    printf("Modos de prueba disponibles:\n");
+    printf("1. Prueba simple (tamaño y rango específico)\n");
+    printf("2. Prueba con distribución específica\n");
+    printf("3. Pruebas completas (todas las distribuciones y tamaños)\n");
+    printf("4. Salir\n");
+}
+
+void modo_prueba_simple() {
     int tamaño, min, max;
     
-    printf("\n=== COMPARADOR DE MÉTODOS DE ORDENAMIENTO ===\n\n");
+    printf("\n--- MODO PRUEBA SIMPLE ---\n");
     
     // Validación del tamaño del arreglo
     do {
@@ -30,10 +38,238 @@ int main() {
     Resultado resultados[4];
     ejecutar_pruebas(tamaño, min, max, resultados);
     imprimir_resultados(resultados, 4);
+}
+
+void modo_distribucion_especifica() {
+    int tamaño, min, max;
+    char distribucion[20];
     
-    printf("\nPresione Enter para salir...");
-    getchar(); // Limpiar el buffer
-    getchar(); // Esperar entrada del usuario
+    printf("\n--- MODO DISTRIBUCIÓN ESPECÍFICA ---\n");
+    
+    // Elegir tamaño
+    do {
+        printf("Tamaño del arreglo (1-100000): ");
+        scanf("%d", &tamaño);
+        if (tamaño <= 0) printf("El tamaño debe ser positivo.\n");
+        if (tamaño > 100000) printf("El tamaño máximo es 100000.\n");
+    } while (tamaño <= 0 || tamaño > 100000);
+    
+    // Elegir distribución
+    printf("\nDistribuciones disponibles:\n");
+    printf("1. aleatorio   - Valores aleatorios uniformemente distribuidos\n");
+    printf("2. ordenado    - Arreglo ya ordenado\n");
+    printf("3. reverso     - Arreglo ordenado en reverso\n");
+    printf("4. casi        - Arreglo casi ordenado (90%% ordenado)\n");
+    printf("5. duplicados  - Muchos valores duplicados\n");
+    
+    int opcion_dist;
+    do {
+        printf("Seleccione distribución (1-5): ");
+        scanf("%d", &opcion_dist);
+    } while (opcion_dist < 1 || opcion_dist > 5);
+    
+    // Mapear opción a nombre de distribución
+    const char* distribuciones[] = {"aleatorio", "ordenado", "reverso", "casi", "duplicados"};
+    strcpy(distribucion, distribuciones[opcion_dist - 1]);
+    
+    // Para distribuciones que necesitan min y max
+    if (strcmp(distribucion, "aleatorio") == 0 || strcmp(distribucion, "duplicados") == 0) {
+        do {
+            printf("Valor mínimo: ");
+            scanf("%d", &min);
+            printf("Valor máximo: ");
+            scanf("%d", &max);
+            
+            if (min > max) {
+                printf("El valor mínimo no puede ser mayor que el máximo.\n");
+            }
+        } while (min > max);
+    } else {
+        min = 0;
+        max = tamaño - 1;
+    }
+    
+    printf("\nGenerando arreglo %s de tamaño %d...\n", distribucion, tamaño);
+    
+    // Generar arreglo según la distribución seleccionada
+    int* original;
+    if (strcmp(distribucion, "aleatorio") == 0) {
+        original = generar_arreglo_aleatorio(tamaño, min, max);
+    } else if (strcmp(distribucion, "ordenado") == 0) {
+        original = generar_arreglo_ordenado(tamaño);
+    } else if (strcmp(distribucion, "reverso") == 0) {
+        original = generar_arreglo_reverso(tamaño);
+    } else if (strcmp(distribucion, "casi") == 0) {
+        original = generar_arreglo_casi_ordenado(tamaño);
+    } else if (strcmp(distribucion, "duplicados") == 0) {
+        original = generar_arreglo_con_duplicados(tamaño, min, max);
+    } else {
+        original = generar_arreglo_aleatorio(tamaño, min, max);
+    }
+    
+    // Mostrar primeros 10 elementos del arreglo generado
+    printf("Arreglo generado: ");
+    imprimir_arreglo(original, tamaño);
+    
+    // Ejecutar pruebas
+    Resultado resultados[4];
+    void (*metodos[])(int *, int) = {seleccion, merge_sort, counting_sort, tim_sort};
+    const char *nombres[] = {"Seleccion", "Merge Sort", "Counting Sort", "Tim Sort"};
+    
+    printf("\nEjecutando pruebas de ordenamiento...\n");
+    for (int i = 0; i < 4; i++) {
+        printf("Probando %s... ", nombres[i]);
+        int *copia = copiar_arreglo(original, tamaño); // Usa la función de util.c
+        resultados[i].tiempo = medir_tiempo(copia, tamaño, metodos[i]);
+        strcpy(resultados[i].nombre, nombres[i]);
+        free(copia);
+        printf("✓ (%.2f ms)\n", resultados[i].tiempo);
+    }
+    
+    free(original);
+    imprimir_resultados(resultados, 4);
+}
+
+void modo_pruebas_completas() {
+    printf("\n--- MODO PRUEBAS COMPLETAS ---\n");
+    
+    int tamanos[] = {100, 200, 300, 400, 500, 1000, 2500, 5000, 7500};
+    int num_tamanos = 9;
+    const char *distribuciones[] = {"aleatorio", "ordenado", "reverso", "casi", "duplicados"};
+    int num_distribuciones = 5;
+    int repeticiones = 3;
+    int min = 0, max = 1000; // Rango fijo para pruebas completas
+    
+    printf("Configuración de pruebas:\n");
+    printf("- Tamaños: ");
+    for (int i = 0; i < num_tamanos; i++) {
+        printf("%d%s", tamanos[i], (i < num_tamanos - 1) ? ", " : "");
+    }
+    printf("\n- Distribuciones: ");
+    for (int i = 0; i < num_distribuciones; i++) {
+        printf("%s%s", distribuciones[i], (i < num_distribuciones - 1) ? ", " : "");
+    }
+    printf("\n- Repeticiones: %d\n", repeticiones);
+    printf("- Rango de valores: %d - %d\n", min, max);
+    
+    int total_pruebas = num_tamanos * num_distribuciones * 4 * repeticiones;
+    printf("- Total de pruebas: %d\n", total_pruebas);
+    printf("\nEsto puede tomar varios minutos...\n");
+    printf("¿Continuar? (s/n): ");
+    
+    char respuesta;
+    scanf(" %c", &respuesta);
+    
+    if (respuesta != 's' && respuesta != 'S') {
+        printf("Pruebas canceladas.\n");
+        return;
+    }
+    
+    // Ejecutar pruebas completas
+    printf("\nEjecutando pruebas completas...\n");
+    
+    FILE* archivo = fopen("resultados_completos.csv", "w");
+    if (!archivo) {
+        printf("Error al crear archivo de resultados.\n");
+        return;
+    }
+    
+    // Escribir cabecera del CSV
+    fprintf(archivo, "algoritmo,distribucion,tamaño,repeticion,tiempo_ms\n");
+    
+    void (*metodos[])(int *, int) = {seleccion, merge_sort, counting_sort, tim_sort};
+    const char *nombres[] = {"Seleccion", "MergeSort", "CountingSort", "TimSort"};
+    
+    int prueba_actual = 0;
+    
+    for (int t = 0; t < num_tamanos; t++) {
+        int tamaño = tamanos[t];
+        
+        for (int d = 0; d < num_distribuciones; d++) {
+            const char* distribucion = distribuciones[d];
+            
+            for (int a = 0; a < 4; a++) {
+                const char* algoritmo = nombres[a];
+                
+                for (int r = 0; r < repeticiones; r++) {
+                    // Generar arreglo según la distribución
+                    int* original;
+                    if (strcmp(distribucion, "aleatorio") == 0) {
+                        original = generar_arreglo_aleatorio(tamaño, min, max);
+                    } else if (strcmp(distribucion, "ordenado") == 0) {
+                        original = generar_arreglo_ordenado(tamaño);
+                    } else if (strcmp(distribucion, "reverso") == 0) {
+                        original = generar_arreglo_reverso(tamaño);
+                    } else if (strcmp(distribucion, "casi") == 0) {
+                        original = generar_arreglo_casi_ordenado(tamaño);
+                    } else if (strcmp(distribucion, "duplicados") == 0) {
+                        original = generar_arreglo_con_duplicados(tamaño, min, max);
+                    } else {
+                        original = generar_arreglo_aleatorio(tamaño, min, max);
+                    }
+                    
+                    int* copia = copiar_arreglo(original, tamaño); // Usa la función de util.c
+                    
+                    // Medir tiempo
+                    double tiempo = medir_tiempo(copia, tamaño, metodos[a]);
+                    
+                    // Guardar en CSV
+                    fprintf(archivo, "%s,%s,%d,%d,%.6f\n", 
+                           algoritmo, distribucion, tamaño, r + 1, tiempo);
+                    
+                    prueba_actual++;
+                    
+                    // Mostrar progreso cada 10 pruebas
+                    if (prueba_actual % 10 == 0) {
+                        printf("Completadas: %d/%d pruebas\n", prueba_actual, total_pruebas);
+                    }
+                    
+                    free(original);
+                    free(copia);
+                }
+            }
+        }
+    }
+    
+    fclose(archivo);
+    printf("\n¡Pruebas completadas! Resultados guardados en 'resultados_completos.csv'\n");
+    printf("Total de pruebas ejecutadas: %d\n", prueba_actual);
+}
+
+int main() {
+    srand(time(NULL));
+    
+    int opcion;
+    
+    do {
+        mostrar_menu_principal();
+        printf("\nSeleccione modo de prueba (1-4): ");
+        scanf("%d", &opcion);
+        
+        switch(opcion) {
+            case 1:
+                modo_prueba_simple();
+                break;
+            case 2:
+                modo_distribucion_especifica();
+                break;
+            case 3:
+                modo_pruebas_completas();
+                break;
+            case 4:
+                printf("Saliendo del programa...\n");
+                break;
+            default:
+                printf("Opción inválida. Intente nuevamente.\n");
+        }
+        
+        if (opcion != 4) {
+            printf("\nPresione Enter para continuar...");
+            getchar(); // Limpiar buffer
+            getchar(); // Esperar entrada
+        }
+        
+    } while (opcion != 4);
     
     return 0;
 }
