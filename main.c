@@ -1,11 +1,46 @@
 #include "util.h"
 
+void menu_principal();
+void menu_pruebas_individuales();
+void probar_estabilidad();
+
 int main() {
-    srand(time(NULL)); // Inicializar semilla para números aleatorios
+    srand(time(NULL));
+    menu_principal();
+    return 0;
+}
+
+void menu_principal() {
+    int opcion;
     
+    do {
+        printf("\n=== COMPARADOR DE METODOS DE ORDENAMIENTO ===\n");
+        printf("1. Pruebas de rendimiento\n");
+        printf("2. Pruebas de estabilidad\n");
+        printf("3. Salir\n");
+        printf("Seleccione una opcion: ");
+        scanf("%d", &opcion);
+        
+        switch(opcion) {
+            case 1:
+                menu_pruebas_individuales();
+                break;
+            case 2:
+                probar_estabilidad();
+                break;
+            case 3:
+                printf("Saliendo...\n");
+                break;
+            default:
+                printf("Opcion no valida.\n");
+        }
+    } while(opcion != 3);
+}
+
+void menu_pruebas_individuales() {
     int tamaño, min, max;
     
-    printf("\n=== COMPARADOR DE MÉTODOS DE ORDENAMIENTO ===\n\n");
+    printf("\n=== PRUEBAS DE RENDIMIENTO ===\n");
     
     // Validación del tamaño del arreglo
     do {
@@ -31,9 +66,16 @@ int main() {
     ejecutar_pruebas(tamaño, min, max, resultados);
     imprimir_resultados(resultados, 4);
     
-    printf("\nPresione Enter para salir...");
-    getchar(); // Limpiar el buffer
-    getchar(); // Esperar entrada del usuario
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
+}
+
+void probar_estabilidad() {
+    printf("\n=== PRUEBAS DE ESTABILIDAD ===\n");
+    probar_estabilidad_todos();
     
-    return 0;
+    printf("\nPresione Enter para continuar...");
+    getchar();
+    getchar();
 }
