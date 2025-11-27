@@ -5,10 +5,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include "contadores.h"
+#include "repeticiones.h"
 
 typedef struct {
     char nombre[20];
-    double tiempo;
+    double tiempo_ms;
+    long comparaciones;
+    long swaps;
+    char estable[3];
 } Resultado;
 
 // Funciones de utilidad
