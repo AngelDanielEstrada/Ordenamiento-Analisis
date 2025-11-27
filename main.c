@@ -48,7 +48,6 @@ void menu_principal() {
     } while(opcion != 5);
 }
 
-// Versión de tu amigo (simple)
 void menu_pruebas_individuales() {
     int tamaño, min, max;
     
@@ -83,7 +82,7 @@ void menu_pruebas_individuales() {
     getchar();
 }
 
-// Tu versión avanzada - Distribuciones específicas
+// Distribuciones específicas
 void modo_distribucion_especifica() {
     int tamaño, min, max;
     char distribucion[20];
@@ -178,7 +177,7 @@ void modo_distribucion_especifica() {
     getchar();
 }
 
-// Tu versión avanzada - Pruebas completas
+//  Pruebas completas
 void modo_pruebas_completas() {
     printf("\n=== PRUEBAS COMPLETAS AUTOMÁTICAS ===\n");
     
@@ -289,10 +288,9 @@ void modo_pruebas_completas() {
     getchar();
 }
 
-// Versión de tu amigo - estabilidad (necesitarás implementar probar_estabilidad_todos())
+
 void probar_estabilidad() {
     printf("\n=== PRUEBAS DE ESTABILIDAD ===\n");
-    // probar_estabilidad_todos(); // Comentado hasta que implementes esta función
     printf("Funcionalidad de estabilidad en desarrollo...\n");
     
     printf("\nPresione Enter para continuar...");

@@ -5,14 +5,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "arreglos.h"
-#include "estabilidad.h"
+
 typedef struct {
     char nombre[20];
     double tiempo;
 } Resultado;
 
-
+// Funciones de utilidad
+int* generar_arreglo(int tamaño, int min, int max);
+int* copiar_arreglo(const int* original, int tamaño);
+void imprimir_arreglo(const int* arreglo, int tamaño);
 
 // Algoritmos de ordenamiento
 void seleccion(int* arr, int n);

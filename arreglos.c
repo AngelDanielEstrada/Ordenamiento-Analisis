@@ -89,6 +89,17 @@ int* generar_arreglo_con_duplicados(int tamaño, int min, int max) {
     return arr;
 }
 
+// Crear copia de un arreglo
+int* copiar_arreglo(const int* original, int tamaño) {
+    int *copia = (int *)malloc(tamaño * sizeof(int));
+    if (!copia) {
+        perror("Error de memoria");
+        exit(EXIT_FAILURE);
+    }
+    memcpy(copia, original, tamaño * sizeof(int));
+    return copia;
+}
+
 // Imprimir arreglo (útil para debugging)
 void imprimir_arreglo(const int* arreglo, int tamaño) {
     printf("[");

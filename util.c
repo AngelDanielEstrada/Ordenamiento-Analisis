@@ -1,9 +1,13 @@
 #include "util.h"
+#include "arreglos.h"
 #include <limits.h>
 #include <math.h>
 
-// Función para generar un arreglo de números aleatorios
-
+// Función para generar un arreglo de números aleatorios (original)
+int *generar_arreglo(int tamaño, int min, int max)
+{
+    return generar_arreglo_aleatorio(tamaño, min, max); 
+}
 
 // Algoritmo de ordenamiento por Selección (versión base)
 void seleccion(int *arr, int n)
