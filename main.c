@@ -13,15 +13,16 @@ int main() {
     return 0;
 }
 
+// Agregar nueva opción al menú
 void menu_principal() {
     int opcion;
     
     do {
         printf("\n=== COMPARADOR DE METODOS DE ORDENAMIENTO ===\n");
-        printf("1. Pruebas de rendimiento individuales\n");
-        printf("2. Pruebas con distribuciones específicas\n");
-        printf("3. Pruebas completas automáticas\n");
-        printf("4. Pruebas de estabilidad\n");
+        printf("1. Pruebas de rendimiento\n");
+        printf("2. Pruebas de estabilidad\n");
+        printf("3. Benchmark completo (generar CSV)\n");
+        printf("4. Prueba rápida\n");
         printf("5. Salir\n");
         printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
@@ -31,13 +32,18 @@ void menu_principal() {
                 menu_pruebas_individuales();
                 break;
             case 2:
-                modo_distribucion_especifica();
+                probar_estabilidad();
                 break;
             case 3:
-                modo_pruebas_completas();
+                generar_benchmark_completo();
                 break;
             case 4:
-                probar_estabilidad();
+                {
+                    int tamaño;
+                    printf("Tamaño para prueba rápida: ");
+                    scanf("%d", &tamaño);
+                    prueba_rapida_benchmark(tamaño);
+                }
                 break;
             case 5:
                 printf("Saliendo...\n");
