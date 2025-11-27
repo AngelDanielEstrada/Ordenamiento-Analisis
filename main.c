@@ -297,3 +297,33 @@ void probar_estabilidad() {
     getchar();
     getchar();
 }
+void benchmark_completo() {
+    printf("\n=== BENCHMARK COMPLETO ===\n");
+    printf("Generando CSV con resultados...\n");
+    
+    int tamaños[] = {100, 200, 300, 400, 500, 1000, 2500, 5000};
+    int num_tamaños = 8;
+    int repeticiones = 3;
+    
+    generar_csv_completo("resultados_benchmark.csv");
+    
+    // Para cada tamaño y distribución ejecutar pruebas
+    for (int t = 0; t < num_tamaños; t++) {
+        int tamaño = tamaños[t];
+        printf("Procesando tamaño: %d\n", tamaño);
+        
+        // Probar con arreglo aleatorio
+        int* arreglo = generar_arreglo_aleatorio(tamaño, 0, 1000);
+        ResultadoCompleto resultado;
+        
+        // Probar cada algoritmo
+        ejecutar_prueba_con_repeticiones(seleccion, "Selection Sort", arreglo, tamaño, repeticiones, &resultado);
+        agregar_resultado_csv("resultados_benchmark.csv", &resultado, "aleatorio");
+        
+        // Repetir para merge, counting, tim sort...
+        
+        free(arreglo);
+    }
+    
+    printf("Benchmark completado. Archivo: resultados_benchmark.csv\n");
+}
